@@ -3,6 +3,7 @@ package kr.bbmm.apitest.controllers.v1;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import kr.bbmm.apitest.advice.exception.CUserNotFoundException;
 import kr.bbmm.apitest.domain.User;
 import kr.bbmm.apitest.model.reponse.CommonResult;
 import kr.bbmm.apitest.model.reponse.ListResult;
@@ -32,7 +33,7 @@ public class UserController {
     public SingleResult<User> findUserById(
             @ApiParam(value = "userId", required = true) @PathVariable(value = "msrl") Long msrl
     ) {
-        return responseService.getSingleResult(userJpaRepo.findById(msrl).orElse(null));
+        return responseService.getSingleResult(userJpaRepo.findById(msrl).orElseThrow(CUserNotFoundException::new));
     }
 
     @ApiOperation(value = "add user info", notes = "add user info")
