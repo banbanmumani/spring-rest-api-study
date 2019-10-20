@@ -4,11 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import kr.bbmm.apitest.domain.User;
+import kr.bbmm.apitest.model.reponse.CommonResult;
+import kr.bbmm.apitest.model.reponse.ListResult;
+import kr.bbmm.apitest.model.reponse.SingleResult;
 import kr.bbmm.apitest.repo.UserJpaRepo;
+import kr.bbmm.apitest.services.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(tags = {"1. User"})
 @RequiredArgsConstructor
@@ -17,16 +19,25 @@ import java.util.List;
 public class UserController {
 
     private final UserJpaRepo userJpaRepo;
+    private final ResponseService responseService;
 
-    @ApiOperation(value = "get user info", notes = "get all user info")
-    @GetMapping(value = "/user")
-    public List<User> findAllUsers() {
-        return userJpaRepo.findAll();
+    @ApiOperation(value = "get all user info", notes = "get all user info")
+    @GetMapping(value = "/users")
+    public ListResult<User> findAllUsers() {
+        return responseService.getListResult(userJpaRepo.findAll());
+    }
+
+    @ApiOperation(value = "get single user info", notes = "get single user info by Id")
+    @GetMapping(value = "/user/{msrl}")
+    public SingleResult<User> findUserById(
+            @ApiParam(value = "userId", required = true) @PathVariable(value = "msrl") Long msrl
+    ) {
+        return responseService.getSingleResult(userJpaRepo.findById(msrl).orElse(null));
     }
 
     @ApiOperation(value = "add user info", notes = "add user info")
     @PostMapping(value = "/user")
-    public User save(
+    public SingleResult<User> save(
             @ApiParam(value = "user id", required = true) @RequestParam String uid,
             @ApiParam(value = "user name", required = true) @RequestParam String name
     ) {
@@ -34,6 +45,30 @@ public class UserController {
                 .uid(uid)
                 .name(name)
                 .build();
-        return userJpaRepo.save(user);
+        return responseService.getSingleResult(userJpaRepo.save(user));
+    }
+
+    @ApiOperation(value = "update user info", notes = "update user info")
+    @PutMapping(value = "/user")
+    public SingleResult<User> modify(
+            @ApiParam(value = "user number", required = true) @RequestParam long msrl,
+            @ApiParam(value = "user id", required = true) @RequestParam String uid,
+            @ApiParam(value = "user name", required = true) @RequestParam String name
+    ) {
+        User user = User.builder()
+                .msrl(msrl)
+                .uid(uid)
+                .name(name)
+                .build();
+        return responseService.getSingleResult(userJpaRepo.save(user));
+    }
+
+    @ApiOperation(value = "delete user info", notes = "delete user info")
+    @DeleteMapping(value = "/user/{msrl}")
+    public CommonResult delete(
+            @ApiParam(value = "user number", required = true) @PathVariable long msrl
+    ) {
+        userJpaRepo.deleteById(msrl);
+        return responseService.getSuccessResult();
     }
 }
