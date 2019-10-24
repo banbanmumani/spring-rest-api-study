@@ -13,3 +13,6 @@ spring:
       ddl-auto: update
     show-sql: true
 #      showSql: true
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8

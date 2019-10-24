@@ -31,7 +31,8 @@ public class UserController {
     @ApiOperation(value = "get single user info", notes = "get single user info by Id")
     @GetMapping(value = "/user/{msrl}")
     public SingleResult<User> findUserById(
-            @ApiParam(value = "userId", required = true) @PathVariable(value = "msrl") Long msrl
+            @ApiParam(value = "userId", required = true) @PathVariable(value = "msrl") Long msrl,
+            @ApiParam(value = "language", defaultValue = "ko") @RequestParam String lang
     ) {
         return responseService.getSingleResult(userJpaRepo.findById(msrl).orElseThrow(CUserNotFoundException::new));
     }
