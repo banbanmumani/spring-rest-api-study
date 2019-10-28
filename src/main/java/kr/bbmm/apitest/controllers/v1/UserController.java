@@ -1,8 +1,6 @@
 package kr.bbmm.apitest.controllers.v1;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import kr.bbmm.apitest.advice.exception.CUserNotFoundException;
 import kr.bbmm.apitest.domain.User;
 import kr.bbmm.apitest.model.reponse.CommonResult;
@@ -22,12 +20,18 @@ public class UserController {
     private final UserJpaRepo userJpaRepo;
     private final ResponseService responseService;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token after log in success", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "get all user info", notes = "get all user info")
     @GetMapping(value = "/users")
     public ListResult<User> findAllUsers() {
         return responseService.getListResult(userJpaRepo.findAll());
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token after log in success", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "get single user info", notes = "get single user info by Id")
     @GetMapping(value = "/user/{msrl}")
     public SingleResult<User> findUserById(
@@ -37,6 +41,9 @@ public class UserController {
         return responseService.getSingleResult(userJpaRepo.findById(msrl).orElseThrow(CUserNotFoundException::new));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token after log in success", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "add user info", notes = "add user info")
     @PostMapping(value = "/user")
     public SingleResult<User> save(
@@ -50,6 +57,9 @@ public class UserController {
         return responseService.getSingleResult(userJpaRepo.save(user));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token after log in success", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "update user info", notes = "update user info")
     @PutMapping(value = "/user")
     public SingleResult<User> modify(
@@ -65,6 +75,9 @@ public class UserController {
         return responseService.getSingleResult(userJpaRepo.save(user));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token after log in success", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "delete user info", notes = "delete user info")
     @DeleteMapping(value = "/user/{msrl}")
     public CommonResult delete(
