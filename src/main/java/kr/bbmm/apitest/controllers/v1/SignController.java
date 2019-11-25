@@ -12,10 +12,7 @@ import kr.bbmm.apitest.repo.UserJpaRepo;
 import kr.bbmm.apitest.services.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -31,7 +28,7 @@ public class SignController {
     private final PasswordEncoder passwordEncoder;
 
     @ApiOperation(value = "log in", notes = "user log in by email")
-    @GetMapping(value = "/signin")
+    @PostMapping(value = "/signin")
     public SingleResult<String> signin(
             @ApiParam(value = "user id: email", required = true) @RequestParam String id,
             @ApiParam(value = "password", required = true) @RequestParam String password
@@ -46,7 +43,7 @@ public class SignController {
     }
 
     @ApiOperation(value = "sign up", notes = "user sign up")
-    @GetMapping(value = "/signup")
+    @PostMapping(value = "/signup")
     public CommonResult signup(
             @ApiParam(value = "user id: email", required = true) @RequestParam String id,
             @ApiParam(value = "password", required = true) @RequestParam String password,

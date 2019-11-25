@@ -33,14 +33,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/*/signin", "/*/signup").permitAll()
                     .antMatchers(HttpMethod.GET, "/exception/**", "helloworld/**").permitAll()
-                .antMatchers("/*/users").hasRole("ADMIN")
-                    .anyRequest().hasRole("USER")
-                .and()
-                    .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and()
-                    .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
-                .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .anyRequest().hasRole("USER")
+            .and()
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .and()
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+            .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
